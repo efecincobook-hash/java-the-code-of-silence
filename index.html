@@ -361,7 +361,7 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:45px 0;color:#6f7c83;f
 const STORE = {
   price: "$34.90",        // price shown on the page, e.g. "$19.90"
   checkoutUrl: "",        // Digistore24 order form link, e.g. "https://www.digistore24.com/product/123456"
-  guaranteeDays: 60       // must match the refund period set in Digistore24
+  guaranteeDays: 30       // must match the refund period set in Digistore24
 };
 
 document.querySelectorAll("[data-price]").forEach(el => el.textContent = STORE.price);
