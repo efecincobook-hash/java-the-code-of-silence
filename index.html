@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The first Java programming gamebook. 8 episodes. A mystery that only moves forward when your code runs. Get the complete Season One.">
+<meta property="og:title" content="The Code of Silence — The first Java programming gamebook">
+<meta property="og:description" content="8 episodes. One investigation. A mystery that only moves forward when your code runs.">
+<meta property="og:type" content="website">
+<title>The Code of Silence — The first Java programming gamebook</title>
+<style>
+:root{
+  --bg:#05070a;--panel:#0b1015;--panel2:#0e151c;--text:#eef3f5;--muted:#91a0aa;
+  --green:#58f39b;--green2:#21c875;--line:rgba(88,243,155,.18);--red:#ff5d69;
+  --max:1180px;--shadow:0 20px 70px rgba(0,0,0,.45)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:
+radial-gradient(circle at 80% 10%,rgba(26,111,75,.12),transparent 28rem),
+radial-gradient(circle at 10% 35%,rgba(30,68,110,.12),transparent 30rem),var(--bg);
+color:var(--text);line-height:1.65;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);background-size:45px 45px}
+a{color:inherit;text-decoration:none}.container{width:min(calc(100% - 40px),var(--max));margin:auto}
+nav{position:fixed;top:0;left:0;right:0;z-index:20;background:rgba(5,7,10,.76);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:800;letter-spacing:.08em;font-size:.84rem}.logo span{color:var(--green)}
+.navlinks{display:flex;gap:28px;color:#aebac1;font-size:.86rem}.navlinks a:hover{color:var(--green)}
+.navcta{border:1px solid var(--line);padding:9px 15px;border-radius:8px;color:var(--green);font-weight:700;font-size:.8rem}
+.hero{min-height:100vh;padding:108px 0 70px;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:65px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--green);font-size:.72rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin-bottom:16px}
+.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 16px var(--green);animation:pulse 1.8s infinite}
+h1{font-size:clamp(2.3rem,4.2vw,3.6rem);line-height:1.02;letter-spacing:-.045em;max-width:760px}
+h1 em{font-style:normal;color:var(--green);white-space:nowrap}
+.hero p{font-size:1.02rem;color:#aeb9bf;max-width:650px;margin:18px 0}
+.tagline{font-size:1.05rem;color:#fff!important;font-weight:700;line-height:1.5;border-left:2px solid var(--green);padding-left:16px}
+.actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:24px}
+.hero .micro{font-size:.84rem;color:#8d9aa2;margin:14px 0 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:14px 20px;border-radius:9px;font-weight:800;font-size:.85rem;letter-spacing:.02em;transition:.25s}
+.btn-primary{background:var(--green);color:#031009;box-shadow:0 0 35px rgba(88,243,155,.14)}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 45px rgba(88,243,155,.28)}
+.btn-secondary{border:1px solid rgba(255,255,255,.14);color:#d8e0e4}.btn-secondary:hover{border-color:var(--green);color:var(--green)}
+.terminal{background:#070b0e;border:1px solid rgba(255,255,255,.1);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;transform:perspective(1000px) rotateY(-3deg)}
+.termbar{height:42px;background:#11171c;display:flex;align-items:center;gap:7px;padding:0 15px;border-bottom:1px solid rgba(255,255,255,.06)}
+.termbar i{width:9px;height:9px;border-radius:50%;background:#44515a}.term-title{margin-left:8px;color:#69777f;font:12px ui-monospace,SFMono-Regular,monospace}
+.term-body{padding:25px;min-height:390px;font:14px/1.9 ui-monospace,SFMono-Regular,Menlo,monospace;color:#9eb0b8}
+.term-body .g{color:var(--green)}.term-body .w{color:#e9eff1}.term-body .dim{color:#65747d}.term-body .r{color:#ff7c86}.term-body .cursor{display:inline-block;width:8px;height:16px;background:var(--green);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+.badge{display:inline-block;margin-top:20px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--green);font-size:.68rem;letter-spacing:.1em;font-weight:800}
+section{padding:105px 0}.section-head{max-width:760px;margin-bottom:48px}.kicker{color:var(--green);font-size:.7rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px}.section-head h2{font-size:clamp(2rem,4vw,3.5rem);line-height:1.05;letter-spacing:-.04em}.section-head p{color:var(--muted);margin-top:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:28px;transition:.25s}.card:hover{transform:translateY(-5px);border-color:var(--line)}.num{color:var(--green);font:700 .72rem ui-monospace;margin-bottom:30px}.card h3{font-size:1.15rem;margin-bottom:8px}.card p{color:var(--muted);font-size:.92rem}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}.steps:before{content:"";position:absolute;left:8%;right:8%;top:31px;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}.step{text-align:center;position:relative;padding:0 16px}.stepno{width:62px;height:62px;border:1px solid var(--line);background:var(--bg);border-radius:50%;display:grid;place-items:center;margin:0 auto 22px;color:var(--green);font:800 14px ui-monospace;position:relative;z-index:2}.step h3{font-size:1rem}.step p{color:var(--muted);font-size:.86rem;margin-top:7px}
+.compare{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:15px;overflow:hidden}.compare article{background:var(--panel);padding:34px}.compare article:last-child{background:linear-gradient(145deg,#0b1712,#09110e)}.compare h3{margin:10px 0}.compare p{color:var(--muted);font-size:.9rem}.highlight{color:var(--green);font-weight:800}
+.learning{display:grid;grid-template-columns:.9fr 1.1fr;gap:50px;align-items:start}.terminal.small .term-body{min-height:270px}.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}.chip{border:1px solid rgba(255,255,255,.1);background:#0a0f13;padding:10px 13px;border-radius:8px;color:#cbd5da;font:12px ui-monospace}.chip:before{content:"✓";color:var(--green);margin-right:8px}
+.intro{border:1px solid rgba(255,255,255,.09);border-radius:18px;background:linear-gradient(140deg,rgba(88,243,155,.05),rgba(255,255,255,.015));padding:44px;margin-top:8px}
+.eplist{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 34px}
+.eptag{border:1px solid rgba(255,255,255,.1);background:#0a0f13;padding:9px 14px;border-radius:8px;color:#cbd5da;font:12px ui-monospace;white-space:nowrap}
+.eptag b{color:var(--green);margin-right:7px}
+.ilist{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:14px 30px;margin-top:8px}
+.ilist li{padding-left:26px;position:relative;color:#c3cdd1;font-size:.92rem;line-height:1.55}
+.ilist li:before{content:"✓";color:var(--green);position:absolute;left:0;font-weight:800}
+.ilist b{color:var(--text)}
+.innovate{margin-top:34px;padding-top:30px;border-top:1px solid rgba(255,255,255,.08);font-size:1.15rem;font-weight:700;color:#fff;line-height:1.55}
+.innovate span{color:var(--green)}
+.qualify{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.qualify .col{border-radius:14px;padding:30px;border:1px solid}
+.qualify .yes{border-color:var(--line);background:linear-gradient(145deg,rgba(88,243,155,.06),rgba(255,255,255,.015))}
+.qualify .no{border-color:rgba(255,93,105,.22);background:linear-gradient(145deg,rgba(255,93,105,.05),rgba(255,255,255,.015))}
+.qualify h3{font-size:1.1rem;margin-bottom:16px}
+.qualify .yes h3{color:var(--green)}.qualify .no h3{color:var(--red)}
+.qualify ul{list-style:none;color:#c3cdd1;font-size:.92rem}.qualify li{margin:10px 0;padding-left:24px;position:relative}
+.qualify .yes li:before{content:"✓";color:var(--green);position:absolute;left:0;font-weight:800}
+.qualify .no li:before{content:"✗";color:var(--red);position:absolute;left:0;font-weight:800}
+.story{border:1px solid rgba(255,255,255,.09);border-radius:18px;background:linear-gradient(120deg,rgba(88,243,155,.055),rgba(255,255,255,.018));padding:45px;position:relative;overflow:hidden}.story:after{content:"CLASSIFIED";position:absolute;right:-30px;top:30px;transform:rotate(8deg);font-size:4rem;font-weight:900;color:rgba(255,255,255,.025)}.story h3{font-size:2rem}.story p{color:#adb8bd;max-width:800px;margin-top:20px;font-size:1.02rem}
+.codegrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}.codecard{background:#070b0e;border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden}.codehead{padding:11px 15px;background:#10161b;color:#73818a;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em}.code{padding:18px;font:12px/1.8 "Courier New",ui-monospace,monospace;color:#aebdc4;min-height:170px}.code .g{color:var(--green)}.code .y{color:#e7cf76}.code .r{color:#ff7c86}
+.episodes{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.episode{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:22px;background:#090e12}.episode.available{border-color:var(--line);box-shadow:inset 0 0 40px rgba(88,243,155,.025)}.episode span{font:700 .68rem ui-monospace;color:#71808a}.episode h3{margin-top:15px}.status{margin-top:20px;color:var(--green);font-size:.7rem;font-weight:800;text-transform:uppercase}.status.locked{color:#8b98a0}.episode a.mini{display:inline-block;margin-top:10px;font-size:.72rem;color:var(--green);text-decoration:underline}
+.offers{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.offer{background:linear-gradient(145deg,#0c1712,#0a0f12);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:32px;box-shadow:var(--shadow);position:relative;display:flex;flex-direction:column}
+.offer.featured{border:1px solid var(--green);box-shadow:0 0 45px rgba(88,243,155,.16)}
+.offer .ribbon{position:absolute;top:0;right:24px;transform:translateY(-50%);background:var(--green);color:#031009;font:800 .68rem ui-monospace;padding:7px 13px;border-radius:6px;letter-spacing:.06em}
+.offer .small{color:#7e8b92;font-size:.75rem}
+.offer h3{margin:8px 0 4px}
+.offer .strike{color:#647178;text-decoration:line-through;font-size:.95rem;margin-top:10px}
+.offer .price{font-size:2.5rem;font-weight:900;margin:4px 0 6px}
+.offer .save{color:var(--green);font-weight:800;font-size:.78rem;margin-bottom:18px}
+.offer ul{list-style:none;color:#b4c0c5;font-size:.88rem;margin-bottom:24px;flex:1}
+.offer li{margin:8px 0;padding-left:20px;position:relative}.offer li:before{content:"✓";color:var(--green);position:absolute;left:0}
+.buysplit{display:flex;align-items:center;gap:18px;margin:56px 0 26px}
+.buysplit:before,.buysplit:after{content:"";flex:1;height:1px;background:rgba(255,255,255,.09)}
+.buysplit span{color:var(--muted);font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.buygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.buycard{background:#090e12;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:22px;display:flex;flex-direction:column;transition:.25s}
+.buycard:hover{transform:translateY(-4px);border-color:var(--line)}
+.buycard.free{border-color:var(--line);box-shadow:inset 0 0 40px rgba(88,243,155,.025)}
+.buycard span{font:700 .68rem ui-monospace;color:#71808a}
+.buycard h4{margin:14px 0 6px;font-size:1rem}
+.buycard .bprice{font-weight:800;font-size:1.15rem;margin-bottom:16px;color:#d8e0e4}
+.buycard.free .bprice{color:var(--green)}
+.buycard a.btn{margin-top:auto;width:100%;padding:10px 14px;font-size:.74rem}
+.testi{border:1px solid rgba(255,255,255,.09);border-radius:18px;background:linear-gradient(140deg,rgba(88,243,155,.05),rgba(255,255,255,.015));padding:44px 46px;max-width:840px;margin:0 auto;position:relative;overflow:hidden}
+.testi:before{content:"\201C";position:absolute;top:8px;left:24px;font:900 5.5rem Georgia,serif;line-height:1;color:rgba(88,243,155,.16)}
+.testi blockquote{position:relative;font-size:1.12rem;line-height:1.75;color:#dfe7ea}
+.testi blockquote em{font-style:normal;color:var(--green);font-weight:700}
+.testi .who{display:flex;align-items:center;gap:15px;margin-top:28px;padding-top:22px;border-top:1px solid rgba(255,255,255,.08)}
+.testi .avatar{width:46px;height:46px;flex:none;border-radius:50%;border:1px solid var(--line);background:#0a0f13;display:grid;place-items:center;color:var(--green);font:800 .74rem ui-monospace}
+.testi .who b{display:block;font-size:.95rem;color:var(--text)}
+.testi .who small{color:var(--muted);font-size:.78rem}
+.guarantee{border:1px solid var(--line);border-radius:18px;background:linear-gradient(120deg,rgba(88,243,155,.06),rgba(255,255,255,.015));padding:50px;text-align:center}
+.guarantee .shield{font-size:2.4rem;margin-bottom:14px}
+.guarantee h3{font-size:1.9rem}.guarantee p{color:#adb8bd;max-width:640px;margin:16px auto 0;font-size:1rem}
+.trustrow{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;margin-top:26px;color:#9aa7ad;font-size:.8rem}
+.trustrow span{display:flex;align-items:center;gap:7px}.trustrow span:before{content:"✓";color:var(--green);font-weight:800}
+.formbox{margin-top:25px;display:flex;gap:10px;max-width:620px}.formbox input{flex:1;background:#080d11;border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:14px}.formbox input:focus{outline:1px solid var(--green);border-color:var(--green)}.formmsg{font-size:.78rem;color:var(--green);margin-top:10px;min-height:20px}.formmsg.err{color:var(--red)}
+.hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important}
+.consent{display:flex;gap:9px;align-items:flex-start;max-width:620px;margin-top:14px;color:#8d9aa2;font-size:.78rem;line-height:1.5;cursor:pointer}
+.consent input{accent-color:var(--green);margin-top:3px;flex:none}.consent a{color:var(--green);text-decoration:underline}
+button[disabled]{opacity:.55;pointer-events:none}
+details{border-bottom:1px solid rgba(255,255,255,.08);padding:20px 0}summary{cursor:pointer;font-weight:700}details p{color:var(--muted);padding-top:12px;max-width:800px}
+footer{border-top:1px solid rgba(255,255,255,.07);padding:45px 0;color:#6f7c83;font-size:.78rem}.footer{display:flex;justify-content:space-between;gap:25px}.footer a:hover{color:var(--green)}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:none}
+@keyframes pulse{50%{opacity:.45;box-shadow:0 0 4px var(--green)}}@keyframes blink{50%{opacity:0}}
+@media(max-width:900px){.hero,.learning{grid-template-columns:1fr}.hero{padding-top:125px}.terminal{transform:none}.grid3,.compare,.codegrid,.qualify,.offers{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr;gap:35px}.steps:before{display:none}.episodes,.buygrid{grid-template-columns:1fr 1fr}.navlinks{display:none}}
+@media(max-width:560px){.container{width:min(calc(100% - 28px),var(--max))}.hero{padding-top:105px}.hero p{font-size:1rem}.actions .btn{width:100%}.steps,.episodes,.buygrid{grid-template-columns:1fr}.story{padding:28px}.testi{padding:28px 26px}.formbox{flex-direction:column}.footer{flex-direction:column}.navcta{display:none}.term-body{font-size:11px;padding:18px;min-height:330px}.guarantee{padding:32px}.intro{padding:26px}.ilist{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav><div class="container nav">
+  <a class="logo" href="#">THE CODE <span>OF SILENCE</span></a>
+  <div class="navlinks"><a href="#book">The Book</a><a href="#episodes">Episodes</a><a href="#faq">FAQ</a></div>
+  <a class="navcta" href="#buy">SEE THE OFFER</a>
+</div></nav>
+
+<main>
+<section class="hero container">
+  <div class="reveal">
+    <div class="eyebrow"><i class="dot"></i> No programming experience required</div>
+    <h1>The first Java programming <em>gamebook</em>. <em>Your code</em> decides what happens next.</h1>
+    <p>A programmer named Ricardo vanishes without a trace, leaving behind nothing but a laptop that's still on and a case left half-solved. To piece together what happened, you write, compile, and run real Java code. Every concept is taught right before you need it, and the output of your program decides where the investigation goes.</p>
+    <div class="actions"><a class="btn btn-primary" data-checkout href="#buy">GET THE FULL SEASON — <span data-price>$XX.XX</span></a><a class="btn btn-secondary" href="#episodes">SEE ALL 8 EPISODES</a></div>
+    <p class="micro">All 8 episodes in one download. Instant access by email and a <span data-days>60</span>-day money-back guarantee.</p>
+    <p class="tagline" style="margin-top:28px">You won't just read the mystery.<br>You'll code it.</p>
+  </div>
+  <div class="terminal reveal">
+    <div class="termbar"><i></i><i></i><i></i><span class="term-title">investigation@laptop:~/silence</span></div>
+    <div class="term-body">
+      <div class="dim">user@laptop:~$ java Investigation --start</div>
+      <div class="w">Loading case...</div><br>
+      <div class="g">Missing person: Ricardo Alves</div>
+      <div class="w">File 01 — The Notebook</div><br>
+      <div class="g">[ SYSTEM ]</div>
+      <div class="dim">No prior experience needed. Write your first Java program to open the file.</div><br>
+      <span class="g">user@laptop:~$ </span><span class="cursor"></span>
+      <div class="badge">SEASON ONE · 8 EPISODES</div>
+    </div>
+  </div>
+</section>
+
+<section id="book"><div class="container">
+  <div class="section-head reveal"><div class="kicker">What is The Code of Silence</div><h2>A real investigation, told in 8 episodes you can only unlock by coding.</h2><p>"The Code of Silence" <em>is not a course</em>, and it's not an ordinary book. It's a story split into 8 episodes where programming is your investigation tool. You read the scene, write the matching code, run it on your computer, and the result decides where the case goes next. No prior knowledge required: every concept is taught right before you need it.</p></div>
+
+  <div class="intro reveal">
+    <div class="kicker">The 8 episodes</div>
+    <div class="eplist">
+      <span class="eptag"><b>01</b>The Notebook</span>
+      <span class="eptag"><b>02</b>The Safe</span>
+      <span class="eptag"><b>03</b>The Organization</span>
+      <span class="eptag"><b>04</b>The Hall of Mirrors</span>
+      <span class="eptag"><b>05</b>The Pact</span>
+      <span class="eptag"><b>06</b>The System Crash</span>
+      <span class="eptag"><b>07</b>The Vault File</span>
+      <span class="eptag"><b>08</b>The Revelation</span>
+    </div>
+    <div class="kicker">What you'll learn</div>
+    <ul class="ilist">
+      <li><b>Classes and Objects</b> — organized like suspect profiles and case evidence</li>
+      <li><b>Fields and Methods</b> — how you record and process every clue</li>
+      <li><b>Constructors and Encapsulation</b> — the safes and files that only open with the right code</li>
+      <li><b>Arrays, Loops, and Collections</b> — the tools you use to search records and evidence</li>
+      <li><b>Inheritance, Interfaces, and Polymorphism</b> — the more complex systems of the final episodes</li>
+      <li><b>Exceptions and Files</b> — how to handle what goes wrong without stalling the investigation</li>
+    </ul>
+    <p class="innovate">This isn't another boring Java course. It's an <span>investigation you can only solve by coding</span>: learning through decisions, at your own pace, with no tedious lectures and no more "Dog extends Animal" exercises.</p>
+  </div>
+</div></section>
+
+<section id="how"><div class="container">
+  <div class="section-head reveal"><div class="kicker">How it works</div><h2>You're not just reading a book. You're in the middle of an investigation.</h2><p>In "The Code of Silence", programming isn't just a subject to study. It's the tool you use to move the case forward.</p></div>
+  <div class="grid3">
+    <article class="card reveal"><div class="num">01 / READ</div><h3>Uncover the clues</h3><p>Follow characters, files, records, and events as the mystery unfolds.</p></article>
+    <article class="card reveal"><div class="num">02 / CODE</div><h3>Write the code</h3><p>Create, compile, and run Java programs to push the investigation forward.</p></article>
+    <article class="card reveal"><div class="num">03 / DISCOVER</div><h3>Follow the output</h3><p>Your program's output tells you which section of the story to go to next.</p></article>
+  </div>
+</div></section>
+
+<section><div class="container">
+  <div class="section-head reveal"><div class="kicker">The mechanic</div><h2>Story → Code → Terminal → Decision → New path</h2><p>It works the same way in all 8 episodes: you learn inside the investigation, and the investigation reacts to what you code.</p></div>
+  <div class="steps">
+    <div class="step reveal"><div class="stepno">01</div><h3>Read the scene</h3><p>Follow the investigation.</p></div>
+    <div class="step reveal"><div class="stepno">02</div><h3>Write</h3><p>Type in the code shown.</p></div>
+    <div class="step reveal"><div class="stepno">03</div><h3>Run</h3><p>Compile and run the program on your computer.</p></div>
+    <div class="step reveal"><div class="stepno">04</div><h3>Follow the result</h3><p>The output points to the next part of the story.</p></div>
+  </div>
+</div></section>
+
+<section><div class="container">
+  <div class="section-head reveal"><div class="kicker">Fiction + programming</div><h2>Reading a story is one thing. Coding your own is another.</h2></div>
+  <div class="compare reveal">
+    <article><span class="kicker">Regular book</span><h3>You read.</h3><p>The next chapter is already decided.</p></article>
+    <article><span class="kicker">Regular course</span><h3>You practice.</h3><p>You learn a concept and solve exercises.</p></article>
+    <article><span class="kicker">The Code of Silence</span><h3>You <span class="highlight">code</span>.</h3><p>You learn the concept, run the code, and the result decides what happens next.</p></article>
+  </div>
+</div></section>
+
+<section><div class="container learning">
+  <div class="reveal"><div class="kicker">From Episode 1 to Episode 8</div><h2>From your first "Hello World" to complete Java programs.</h2><p style="color:var(--muted);margin-top:18px">Episode 1 teaches you the Java basics. Over the next 7 episodes, the investigation moves forward, and so does your code, with new concepts in every file you unlock.</p><div class="chips">
+    <span class="chip">Java</span><span class="chip">Classes</span><span class="chip">Objects</span><span class="chip">Fields</span><span class="chip">Methods</span><span class="chip">Constructors</span><span class="chip">Arrays</span><span class="chip">Loops</span><span class="chip">Inheritance</span><span class="chip">Interfaces</span><span class="chip">Exceptions</span><span class="chip">Collections</span><span class="chip">Files</span><span class="chip">Polymorphism</span>
+  </div></div>
+  <div class="terminal small reveal"><div class="termbar"><i></i><i></i><i></i><span class="term-title">episode_02.java</span></div><div class="term-body">
+    <div class="g">public class Safe {</div>
+    <div>&nbsp;&nbsp;private String[] attempts;</div>
+    <div>&nbsp;&nbsp;public boolean open(String code) {</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;for (String a : attempts) {</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (a.equals(code)) return <span class="w">true</span>;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;}</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;return <span class="w">false</span>;</div>
+    <div>&nbsp;&nbsp;}</div>
+    <div class="g">}</div><br>
+    <div class="dim">// What's locked inside?</div>
+  </div></div>
+</div></section>
+
+<section><div class="container">
+  <div class="section-head reveal"><div class="kicker">Before you start</div><h2>Is this for you?</h2><p>A quick check before you decide.</p></div>
+  <div class="qualify reveal">
+    <div class="col yes"><h3>IT'S FOR YOU IF...</h3><ul>
+      <li>You want to learn Java from scratch without sitting through a dull course</li>
+      <li>You enjoy games, mysteries, and stories where your choices matter</li>
+      <li>You've tried learning to code from video lessons and it never clicked</li>
+      <li>You like the idea of compiling code and watching the result decide what happens</li>
+      <li>You'd rather learn by doing than by watching</li>
+    </ul></div>
+    <div class="col no"><h3>IT'S NOT FOR YOU IF...</h3><ul>
+      <li>You're already an advanced programmer looking for dense technical material</li>
+      <li>You want a traditional Java course with no story</li>
+      <li>You don't enjoy mystery, investigation, or suspense</li>
+      <li>You expect to finish without writing any code</li>
+      <li>You're not interested in reading while you learn</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<section id="case"><div class="container">
+  <div class="story reveal"><div class="kicker">The case</div><h3>WHAT YOU'LL UNCOVER</h3><p>A programmer has disappeared. The police found very few clues. A laptop was left behind. In Episode 1 you retrace that man's first steps through code, and you discover that the laptop seems to know things that haven't happened yet.</p><p>And that's only the first file. Ricardo, or whoever was hiding behind that name, left traces in 7 other places. Each one opens only with a different line of code.</p></div>
+</div></section>
+
+<section><div class="container">
+  <div class="section-head reveal"><div class="kicker">Inside the episodes</div><h2>The code is a clue, too.</h2><p>A taste of what's waiting for you from Episode 2 on.</p></div>
+  <div class="codegrid">
+    <div class="codecard reveal"><div class="codehead">Java code</div><div class="code"><span class="g">public class Safe {</span><br>&nbsp;&nbsp;private String[] attempts;<br>&nbsp;&nbsp;public boolean open(<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="y">String code</span>) {<br>&nbsp;&nbsp;&nbsp;&nbsp;...<br>&nbsp;&nbsp;}<br><span class="g">}</span></div></div>
+    <div class="codecard reveal"><div class="codehead">Terminal</div><div class="code"><span class="g">&gt; javac Safe.java</span><br><span class="g">compiled successfully.</span><br><br>Testing combinations:<br><span class="y">access denied.</span></div></div>
+    <div class="codecard reveal"><div class="codehead">Your code decides</div><div class="code"><span class="g">YOUR CODE DECIDES</span><br><br>Correct attempt → Section 6<br>Wrong attempt → Section 14<br><br><span class="dim">Your result. Your path.</span></div></div>
+  </div>
+</div></section>
+
+<section><div class="container">
+  <div class="section-head reveal"><div class="kicker">The rule of the game</div><h2>Here, even a bug can hide a clue.</h2><p>In "The Code of Silence", mistakes can be part of the experience. Your code may take you somewhere else in the story.</p></div>
+  <div class="story reveal" style="text-align:center"><h3 style="color:var(--green)">Your code doesn't just solve the problem.<br>It can change the story.</h3></div>
+</div></section>
+
+<section id="episodes"><div class="container">
+  <div class="section-head reveal"><div class="kicker">The series</div><h2>8 episodes. One investigation. All in one download.</h2></div>
+  <div class="episodes">
+    <div class="episode available reveal"><span>EPISODE 01</span><h3>The Notebook</h3><div class="status">✓ Included · start here</div><a class="mini" href="#buy">Get the season →</a></div>
+    <div class="episode available reveal"><span>EPISODE 02</span><h3>The Safe</h3><div class="status">✓ Included</div><a class="mini" href="#buy">Unlock →</a></div>
+    <div class="episode available reveal"><span>EPISODE 03</span><h3>The Organization</h3><div class="status">✓ Included</div><a class="mini" href="#buy">Unlock →</a></div>
+    <div class="episode available reveal"><span>EPISODE 04</span><h3>The Hall of Mirrors</h3><div class="status">✓ Included</div><a class="mini" href="#buy">Unlock →</a></div>
+    <div class="episode available reveal"><span>EPISODE 05</span><h3>The Pact</h3><div class="status">✓ Included</div><a class="mini" href="#buy">Unlock →</a></div>
+    <div class="episode available reveal"><span>EPISODE 06</span><h3>The System Crash</h3><div class="status">✓ Included</div><a class="mini" href="#buy">Unlock →</a></div>
+    <div class="episode available reveal"><span>EPISODE 07</span><h3>The Vault File</h3><div class="status">✓ Included</div><a class="mini" href="#buy">Unlock →</a></div>
+    <div class="episode available reveal"><span>EPISODE 08</span><h3>The Revelation</h3><div class="status">✓ Included</div><a class="mini" href="#buy">Unlock →</a></div>
+  </div>
+</div></section>
+
+<section id="reviews"><div class="container">
+  <div class="section-head reveal" style="text-align:center;margin-left:auto;margin-right:auto"><div class="kicker">Reader feedback</div><h2>What readers say about Episode 1.</h2></div>
+  <div class="testi reveal">
+    <blockquote>I found it an <em>excellent way to get students engaged</em> with programming concepts: instead of memorizing theory, you discover everything inside a story that keeps you hooked from start to finish. And that makes a real difference when you're learning. <em>It helps things stick and keeps your attention on the material</em>, something regular programming material rarely manages. I'd recommend it without a second thought, especially for anyone starting from scratch.</blockquote>
+    <div class="who">
+      <div class="avatar">01</div>
+      <div><b>João Vitor</b><small>Java beginner · read "The Notebook" in the original Portuguese edition · translated review</small></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="buy"><div class="container">
+  <div class="section-head reveal"><div class="kicker">Start now</div><h2 style="font-size:clamp(2.3rem,5vw,4.2rem);line-height:1.02">Open the case and follow it to the <span style="color:var(--green)">end.</span></h2><p style="color:var(--muted);margin-top:18px">The complete Season One, all 8 episodes, in a single download. No waiting for the next episode.</p></div>
+
+  <div class="offer featured reveal" style="max-width:640px;margin:0 auto">
+    <div class="ribbon">COMPLETE SEASON</div>
+    <div class="small">THE CODE OF SILENCE</div>
+    <h3>SEASON ONE — Episodes 1 to 8</h3>
+    <div class="price" data-price>$XX.XX</div>
+    <div class="save">One-time payment · instant download</div>
+    <ul>
+      <li>All 8 episodes in a single .zip file</li>
+      <li>From your first Java program to complete object-oriented systems</li>
+      <li>Your code makes the decisions, from the first episode to the last</li>
+      <li>Three different endings</li>
+      <li>Lifetime access: go back and discover the other paths</li>
+      <li>Secure checkout via Digistore24</li>
+    </ul>
+    <a class="btn btn-primary" style="width:100%" data-checkout href="#buy">GET THE FULL SEASON →</a>
+  </div>
+</div></section>
+
+<section><div class="container">
+  <div class="guarantee reveal">
+    <div class="shield">🛡</div>
+    <h3>Zero risk: <span data-days>60</span>-day money-back guarantee.</h3>
+    <p>If for any reason you buy it and decide it's not for you, just request a refund within <span data-days>60</span> days. No questions asked, no hassle. The risk is all ours.</p>
+    <div class="trustrow"><span>100% secure checkout</span><span>Refunds within&nbsp;<b data-days style="font-weight:inherit">60</b>&nbsp;days</span><span>Instant access after payment</span></div>
+  </div>
+</div></section>
+
+<section><div class="container">
+  <div class="section-head reveal"><div class="kicker">Still deciding?</div><h2>Leave your email and we'll let you know about deals and bonuses.</h2><p>Enter your name and email to get news about The Code of Silence and special offers.</p></div>
+  <form class="formbox reveal" id="leadForm" novalidate>
+    <input id="name" name="nome" type="text" placeholder="Your name" autocomplete="name" required>
+    <input id="email" name="email" type="email" placeholder="Your email" autocomplete="email" required>
+    <!-- anti-spam honeypot: invisible to people, attractive to bots -->
+    <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
+    <button class="btn btn-primary" id="leadBtn" type="submit">KEEP ME POSTED</button>
+  </form>
+  <label class="consent reveal">
+    <input id="consent" type="checkbox" required>
+    <span>I agree to have my name and email stored and to receive emails about "The Code of Silence", as described in the
+    <a href="privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+  </label>
+  <div class="formmsg" id="formMsg" role="status" aria-live="polite"></div>
+  <small style="display:block;color:#647178;margin-top:5px">You can unsubscribe at any time.</small>
+</div></section>
+
+<section id="faq"><div class="container">
+  <div class="section-head reveal"><div class="kicker">FAQ</div><h2>Frequently asked questions</h2></div>
+  <div class="reveal">
+    <details><summary>What do I get?</summary><p>The complete Season One of "The Code of Silence": all 8 episodes, delivered together in a single .zip file.</p></details>
+    <details><summary>How do I receive it?</summary><p>Right after your payment is confirmed, Digistore24 sends you an email with your download link.</p></details>
+    <details><summary>Do I need to know how to code?</summary><p>No. Episode 1 starts from zero, including how to set up Java on your computer and open the terminal. Every new concept is explained before you need it.</p></details>
+    <details><summary>Do I need to buy any software?</summary><p>No. Everything you need to write and run Java is free, and Episode 1 walks you through the setup step by step.</p></details>
+    <details><summary>Are there different paths in the story?</summary><p>Yes. The output of your code can send you to different sections in each episode, and the final episode has three different endings.</p></details>
+    <details><summary>What if I don't like it?</summary><p>You're covered by a <span data-days>60</span>-day money-back guarantee. If it's not for you, you get 100% of your money back, no questions asked.</p></details>
+    <details><summary>Where do I pay?</summary><p>Checkout is handled securely by Digistore24, our authorized reseller.</p></details>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="container footer"><div><strong style="color:#b9c4c9">The Code of Silence</strong><br>© 2026. All rights reserved.</div><div><a href="#">Home</a> · <a href="#case">The Case</a> · <a href="#episodes">Episodes</a> · <a href="#faq">FAQ</a> · <a href="privacy-policy.html">Privacy Policy</a></div></div></footer>
+
+<script>
+/* ================================
+   STORE SETTINGS — edit only this block
+================================ */
+const STORE = {
+  price: "$XX.XX",        // price shown on the page, e.g. "$19.90"
+  checkoutUrl: "",        // Digistore24 order form link, e.g. "https://www.digistore24.com/product/123456"
+  guaranteeDays: 60       // must match the refund period set in Digistore24
+};
+
+document.querySelectorAll("[data-price]").forEach(el => el.textContent = STORE.price);
+document.querySelectorAll("[data-days]").forEach(el => el.textContent = STORE.guaranteeDays);
+if (STORE.checkoutUrl) {
+  document.querySelectorAll("[data-checkout]").forEach(a => {
+    a.href = STORE.checkoutUrl; a.target = "_blank"; a.rel = "noopener";
+  });
+}
+
+/* Google Apps Script web app URL (ends in /exec). */
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwIpD7Sz1WKTmxFLFW9ui1ZkE0Qcgrf7lL-P-hbuJZnO_bO4ASPh-x78bWRuJHJiSV-/exec";
+
+/* Must match SHARED_TOKEN in Code.gs. */
+const LEAD_TOKEN = "1a2c40ff7b88353fbcc01b6334a91554d57b47e8";
+
+/* ---------- Lead capture → Google Sheets ---------- */
+const form    = document.getElementById("leadForm");
+const msg     = document.getElementById("formMsg");
+const leadBtn = document.getElementById("leadBtn");
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function setMsg(text, isError){
+  msg.textContent = text;
+  msg.classList.toggle("err", !!isError);
+}
+
+form.addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  const nome    = document.getElementById("name").value.trim();
+  const email   = document.getElementById("email").value.trim();
+  const consent = document.getElementById("consent").checked;
+  const website = document.getElementById("website").value;
+
+  if(!nome){                 setMsg("Please enter your name.", true); return; }
+  if(!EMAIL_RE.test(email)){ setMsg("Please enter a valid email address.", true); return; }
+  if(!consent){              setMsg("Please agree to the Privacy Policy.", true); return; }
+  if(website){               return; }  // bot: silently discard
+
+  const qs = new URLSearchParams(location.search);
+  const dados = new URLSearchParams({
+    token:         LEAD_TOKEN,
+    nome:          nome,
+    email:         email,
+    website:       website,
+    consentimento: "true",
+    origem:        location.href,
+    utm_source:    qs.get("utm_source")   || "",
+    utm_medium:    qs.get("utm_medium")   || "",
+    utm_campaign:  qs.get("utm_campaign") || "",
+    user_agent:    navigator.userAgent
+  });
+
+  leadBtn.disabled = true;
+  setMsg("Sending...", false);
+
+  try{
+    /* "Simple request" Content-Type: avoids a CORS preflight,
+       which Apps Script doesn't answer. */
+    const resp = await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: dados.toString(),
+      redirect: "follow"
+    });
+    const out = await resp.json();
+    if(out.status !== "ok") throw new Error(out.message || "failed");
+
+    setMsg("You're in. Welcome to the investigation.", false);
+    form.reset();
+    document.getElementById("consent").checked = false;
+  }catch(err){
+    /* Fallback: opaque request (no response read) in case CORS fails. */
+    try{
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: dados.toString()
+      });
+      setMsg("You're in. Welcome to the investigation.", false);
+      form.reset();
+      document.getElementById("consent").checked = false;
+    }catch(err2){
+      setMsg("We couldn't send that right now. Please try again in a moment.", true);
+    }
+  }finally{
+    leadBtn.disabled = false;
+  }
+});
+
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{ if(entry.isIntersecting) entry.target.classList.add("visible"); });
+},{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
